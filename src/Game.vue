@@ -78,6 +78,19 @@ function showMessage(msg: string, time = 1000) {
     </div>
     <button @click="activate" :disabled="!encoded">Go</button>
   </div>
+  <hr />
+  <footer>
+  <small>
+    This project is under an MIT licence and is hosted at
+    <a href="https://github.com/mcshaz/letter-swap-decoder">
+      github.com/mcshaz/letter-swap-decoder
+    </a>.
+    It borrows heavily from Evan You's Vue version of Wordle on StackBlitz 
+    <a href="https://stackblitz.com/edit/vitejs-vite-jjggsx">
+      stackblitz.com/edit/vitejs-vite-jjggsx
+    </a>
+  </small>
+  </footer>
 </template>
 
 <style scoped>
