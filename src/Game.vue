@@ -76,7 +76,7 @@ function showMessage(msg: string, time = 1000) {
     <div>
       <textarea id="encoded-text" v-model="encoded"></textarea>
     </div>
-    <button @click="activate" :disabled="!encoded">Go</button>
+    <button id="activate-button" @click="activate" :disabled="!encoded">Go</button>
   </div>
   <hr />
   <footer>
@@ -96,6 +96,7 @@ function showMessage(msg: string, time = 1000) {
 <style scoped>
 #encoded-text {
   width: 100%;
+  min-height:50vh;
 }
 
 .message {
@@ -118,51 +119,35 @@ function showMessage(msg: string, time = 1000) {
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 5px;
 }
-.tile {
-  width: 100%;
-  font-size: 2rem;
-  line-height: 2rem;
-  font-weight: bold;
-  vertical-align: middle;
-  text-transform: uppercase;
-  user-select: none;
-  position: relative;
+
+#activate-button {
+	display: inline-block;
+	padding: 0.375rem 0.75rem;
+  margin: 0.3rem;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+  color: #fff;
+	text-decoration: none;
+	vertical-align: middle;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	border: 1px solid #198754;
+	border-radius: 0.375rem;
+	background-color: #198754;
+	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
-.tile .front,
-.tile .back {
-  box-sizing: border-box;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.6s;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+#activate-button:hover {
+  background-color: #157347;
+  border-color: #146c43;
 }
-.tile .front {
-  border: 2px solid #ccc;
-}
-.tile .back {
-  transform: rotateX(180deg);
-}
-.tile.filled .front {
-  border-color: #999;
-}
-.tile.filled {
-  animation: zoom 0.2s;
-}
-.tile:not(.empty) {
-  border: none;
-}
-.tile.revealed .front {
-  transform: rotateX(180deg);
-}
-.tile.revealed .back {
-  transform: rotateX(0deg);
+#activate-button:disabled, fieldset:disabled .btn {
+	pointer-events: none;
+	background-color: #198754;
+	border-color: #198754;
+	opacity: 0.65;
 }
 
 @keyframes zoom {
@@ -174,43 +159,4 @@ function showMessage(msg: string, time = 1000) {
   }
 }
 
-.shake {
-  animation: shake 0.5s;
-}
-
-@keyframes shake {
-  0% {
-    transform: translate(1px);
-  }
-  10% {
-    transform: translate(-2px);
-  }
-  20% {
-    transform: translate(2px);
-  }
-  30% {
-    transform: translate(-2px);
-  }
-  40% {
-    transform: translate(2px);
-  }
-  50% {
-    transform: translate(-2px);
-  }
-  60% {
-    transform: translate(2px);
-  }
-  70% {
-    transform: translate(-2px);
-  }
-  80% {
-    transform: translate(2px);
-  }
-  90% {
-    transform: translate(-2px);
-  }
-  100% {
-    transform: translate(1px);
-  }
-}
 </style>

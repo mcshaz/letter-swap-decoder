@@ -62,7 +62,7 @@ function letterClick(letter: string) {
     resize: both;
     text-align: left;
     overflow-y: scroll;
-    height: 70vh;
+    max-height: 50vh;
     font-family: 'Courier New', Courier, monospace;
   }
   .non-alpha {
