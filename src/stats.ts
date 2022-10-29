@@ -5,10 +5,8 @@ const letterPs= [8.1238,1.4893,2.7114,4.3192,12.0195,2.3039,2.0257,5.9215,7.3054
 function allPsForGivenLetter(letterCount: number, totalLetters: number) {
   const rv: Record<string, number> = {}
   for (let i = 0; i < 26; ++i) {
-    const cdf = [binomCDF(letterCount, totalLetters, letterPs[i]),
-                binomCDF(totalLetters - letterCount, totalLetters, letterPs[i])]
-        .map(p => p > 0.5 ? 1 - p : p)
-    rv[String.fromCharCode(i + 65)] = cdf[0] + cdf[1]
+    const cdf = binomCDF(letterCount, totalLetters, letterPs[i])
+    rv[String.fromCharCode(i + 65)] = cdf > 0.5 ? (1 - cdf) : cdf
   }
   return rv
 }

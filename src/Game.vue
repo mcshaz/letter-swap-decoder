@@ -7,14 +7,14 @@ import LetterDetails from './LetterDetails.vue'
 
 let usrMessage = $ref('');
 let encoded = $ref('');
-let activeLetter = ref('')
+let activeLetter = $ref('')
 let isActive=$ref(false)
 const decryptionKeys = reactive<Record<string, string>>({})
 
 const allLetterDetails = computed(() => alphabetDetails(encoded))
 
-const activeLetterDetails = computed(() => activeLetter.value
-  ? allLetterDetails.value.letterDetails[activeLetter.value]
+const activeLetterDetails = computed(() => activeLetter
+  ? allLetterDetails.value.letterDetails[activeLetter]
   : { pValues: {} })
 
 onMounted(() => {
@@ -36,11 +36,11 @@ async function activate() {
 }
 
 function onKey(key: string) {
-  if (key.length !== 1 || !/[a-z]/i.test(key) || !activeLetter.value) return
+  if (key.length !== 1 || !/[a-z]/i.test(key) || !activeLetter) return
   key = key.toUpperCase()
   const used = Object.keys(decryptionKeys).find(k => decryptionKeys[k] === key)
   if (used) delete decryptionKeys[used] 
-  decryptionKeys[activeLetter.value] = key
+  decryptionKeys[activeLetter] = key
 }
 
 function showMessage(msg: string, time = 1000) {

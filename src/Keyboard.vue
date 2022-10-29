@@ -1,28 +1,45 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { interpolateBetweenColors } from './stats';
+import { interpolateBetweenColors, normalise } from './stats';
 
 let props = defineProps<{
   decryptionKeys: Record<string, string>;
   pValues: Record<string, number>;
 }>();
 
+let isNormalised = $ref(false)
+
 const kb = [
   'QWERTYUIOP'.split(''),
   'ASDFGHJKL'.split(''),
-  'ZXCVBNM'.split(''),
+  [...'ZXCVBNM'.split(''), 'Normalise'],
 ];
 
 const rows = computed(() => {
   const used = new Set(Object.values(props.decryptionKeys))
   const highPColour = {r: 0, g: 255, b: 0}
   const lowPColour = {r: 255, g: 0, b: 0}
-  return kb.map(k => k.map(c => ({
-    value: c,
-    colour: interpolateBetweenColors(lowPColour, highPColour, props.pValues[c] || 0),
-    p: `p-value=${props.pValues[c]?.toFixed(3) || 'N/A'}`,
-    isInUse: used.has(c)
-  })
+  let deltas = props.pValues
+  if (isNormalised) {
+    const normalisedPs = normalise(...Object.values(deltas))
+    deltas = Object.fromEntries(Object.keys(deltas).map((k, i) => [k, normalisedPs[i]]))
+  } else {
+    // *2 because it is a 1 tailed distribution looking at as or more extreme so 0.5 is max
+    const entries = Object.entries(deltas)
+    entries.forEach(e => e[1] = e[1] * 2)
+    deltas = Object.fromEntries(entries)
+  }
+
+  return kb.map(k => k.map(c => c.length === 1
+    ? {
+      value: c,
+      colour: interpolateBetweenColors(lowPColour, highPColour, deltas[c] || 0),
+      p: `p-value=${props.pValues[c]?.toFixed(3) || 'N/A'}`,
+      isInUse: used.has(c)
+    }
+    : {
+      value: c,
+    }
 ))})
 
 </script>
@@ -31,15 +48,26 @@ const rows = computed(() => {
   <div id="keyboard">
     <div class="row" v-for="(row, i) in rows">
       <div :class="`spacer${i}`"></div>
-      <button
-        v-for="key in row"
-        :class="key.isInUse ? 'used-key' : ''"
-        :style="{borderColor:`rgb(${key.colour.r},${key.colour.g},${key.colour.b})`}"
-        @click="$emit('key', key.value)"
-        :title="key.p"
-      >
-        <span>{{ key.value }}</span>
-      </button>
+      <template v-for="key in row">
+        <button
+          v-if="key.colour"
+          :class="key.isInUse ? 'used-key' : ''"
+          :style="{borderColor:`rgb(${key.colour.r},${key.colour.g},${key.colour.b})`}"
+          @click="$emit('key', key.value)"
+          :title="key.p"
+        >
+          <span>{{ key.value }}</span>
+        </button>
+        <button
+          v-else
+          class="normalise"
+          :class="isNormalised ? 'depressed' : ''"
+          @click="isNormalised=!isNormalised"
+          title="spread narrow range of colours (representing small differences in letter probabilities) wider"
+        >
+          <span>{{ key.value }}</span>
+        </button>
+      </template>
       <div :class="`spacer${i}`"></div>
     </div>
   </div>
@@ -89,5 +117,17 @@ button:last-of-type {
 }
 button.big {
   flex: 1.5;
+}
+.normalise {
+  padding: 0 7px;
+  font-size:90%;
+  text-transform: lowercase;
+}
+.depressed {
+  background: #e5e5e5;
+  -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+  -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+  box-shadow: inset 0px 0px 5px #c1c1c1;
+  outline: none;
 }
 </style>
