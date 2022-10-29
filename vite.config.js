@@ -1,11 +1,16 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue';
-
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    vue({
-      reactivityTransform: true,
-    }),
-  ],
-});
+export default defineConfig(({ command }) => {
+  const config = {
+    plugins: [
+      vue({
+        reactivityTransform: true,
+      }),
+    ]
+  }
+  if (command === 'build') {
+    config.base = '/letter-swap-decoder/'
+  }
+  // https://vitejs.dev/config/
+  return config;
+})
