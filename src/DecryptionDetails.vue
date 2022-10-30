@@ -35,7 +35,7 @@
           <th rowspan="2">Encoded</th>
           <th rowspan="2">Decodes to</th>
           <th rowspan="2">Occurences</th>
-          <th colspan="3">p value</th>
+          <th colspan="3">probabilities</th>
         </tr>
         <tr>
           <th>Value</th>

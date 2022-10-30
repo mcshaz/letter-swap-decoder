@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { interpolateBetweenColors, normalise } from './stats';
+import { interpolateBetweenColors, normalise, orderNormalise } from './stats';
 
 let props = defineProps<{
   decryptionKeys: Record<string, string>;
@@ -11,34 +11,29 @@ defineEmits<{
   (e: 'key', key: string): void
   (e: 'enter'): void}>()
 
-let isNormalised = ref(false)
+let isRank = ref(false)
 
 const kb = [
   'QWERTYUIOP'.split(''),
   'ASDFGHJKL'.split(''),
-  ['normalise', ...'ZXCVBNM'.split(''),'enter'],
+  ['rank', ...'ZXCVBNM'.split(''),'enter'],
 ];
+
+const isNoPValues = computed(() => !Object.keys(props.pValues).length)
 
 const rows = computed(() => {
   const used = new Set(Object.values(props.decryptionKeys))
   const highPColour = {r: 0, g: 255, b: 0}
   const lowPColour = {r: 255, g: 0, b: 0}
-  let deltas = props.pValues
-  if (isNormalised.value) {
-    const normalisedPs = normalise(...Object.values(deltas))
-    deltas = Object.fromEntries(Object.keys(deltas).map((k, i) => [k, normalisedPs[i]]))
-  } else {
-    // *2 because it is a 1 tailed distribution looking at as or more extreme so 0.5 is max
-    const entries = Object.entries(deltas)
-    entries.forEach(e => e[1] = e[1] * 2)
-    deltas = Object.fromEntries(entries)
-  }
+  const transform = isRank ? orderNormalise : normalise
+  const normalised = transform(...Object.values(props.pValues))
+  const deltas = Object.fromEntries(Object.keys(props.pValues).map((k, i) => [k, normalised[i]]))
 
   return kb.map(k => k.map(c => c.length === 1
     ? {
       value: c,
       colour: interpolateBetweenColors(lowPColour, highPColour, deltas[c] || 0),
-      p: `p-value=${props.pValues[c]?.toFixed(3) || 'N/A'}`,
+      p: `probability=${props.pValues[c]?.toFixed(3) || '[Select a letter]'}`,
       isInUse: used.has(c)
     }
     : {
@@ -49,11 +44,11 @@ const rows = computed(() => {
 </script>
 
 <template>
-  <div id="keyboard">
+  <fieldset id="keyboard" :disabled="isNoPValues">
     <div class="row" v-for="(row, i) in rows">
       <div :class="`spacer${i}`"></div>
       <template v-for="key in row" :key="key">
-        <button
+        <button type="button"
           v-if="key.colour"
           :class="key.isInUse ? 'used-key' : ''"
           :style="{borderColor:`rgb(${key.colour.r},${key.colour.g},${key.colour.b})`}"
@@ -62,16 +57,16 @@ const rows = computed(() => {
         >
           <span>{{ key.value }}</span>
         </button>
-        <button
-          v-else-if="key.value==='normalise'"
+        <button type="button"
+          v-else-if="key.value==='rank'"
           class="non-alpha"
-          :class="isNormalised ? 'depressed' : ''"
-          @click="isNormalised=!isNormalised"
-          title="spread narrow range of colours (representing small differences in letter probabilities) wider"
+          :class="isRank ? 'depressed' : ''"
+          @click="isRank=!isRank"
+          :title="`Show red (unlikely) to green (likely) graduated according to probability ${isRank?'value':'rank only'}`"
         >
           <span>{{ key.value }}</span>
         </button>
-        <button v-else
+        <button v-else type="button"
           class="non-alpha"
           @click="$emit('enter')"
         >
@@ -80,10 +75,13 @@ const rows = computed(() => {
       </template>
       <div :class="`spacer${i}`"></div>
     </div>
-  </div>
+  </fieldset>
 </template>
 
 <style scoped>
+fieldset {
+  border: 0 none;
+}
 #keyboard {
   margin: 30px 75px 0;
   user-select: none;
@@ -121,6 +119,10 @@ button {
   align-items: center;
   text-transform: uppercase;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
+}
+button:disabled {
+	pointer-events: none;
+	opacity: 0.65;
 }
 button:last-of-type {
   margin: 0;
