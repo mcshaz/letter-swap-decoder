@@ -26,7 +26,7 @@ for the selected (encoded) letter.
 diff 2 refers to the 2nd to 3rd difference. The idea being that looking for encoded letters in which
 the frequency makes 1 or 2 decoded letters much more likely than others may be a good starting place.
 
-The p-value refers to a 1-tail binomial cumulative distribution function - meaning the probability that the number of occurences or more extreme was seen, given the frequency counted by Cornell Uni.
+The p-value refers to a 1-tail binomial cumulative distribution function - meaning the probability that the number of occurences or more extreme was seen, given the letter frequency counts collected by Cornell University.
 
 ## Acknowledgements
 Written in Vue3 with ViteJS and using @stdlib/stats-base-dists-binomial-cdf for
