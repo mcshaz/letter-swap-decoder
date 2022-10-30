@@ -15,8 +15,9 @@ const emit = defineEmits<{
 let indx = 0;
 const paras = computed(() => props.modelValue.split('\n').map(p => p.split('').map(
   l => {
+    const id = 'l' + ++indx
     if (!/[a-z]/i.test(l)) return {
-      id: 'l' + indx,
+       id,
       display: l, 
       isNonAlpha: true 
     }
@@ -25,14 +26,14 @@ const paras = computed(() => props.modelValue.split('\n').map(p => p.split('').m
       let display = props.decryptionKeys[l]
       if (l !== uc) display = display.toLowerCase()
       return {
-        id: 'l' + ++indx,
+        id,
         display,
         original: l,
         uc
       }
     }
     return {
-      id: 'l' + indx,
+      id,
       display: l,
       uc
     }

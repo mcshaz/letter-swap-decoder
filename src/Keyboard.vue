@@ -24,7 +24,7 @@ const rows = computed(() => {
   const highPColour = {r: 0, g: 255, b: 0}
   const lowPColour = {r: 255, g: 0, b: 0}
   let deltas = props.pValues
-  if (isNormalised) {
+  if (isNormalised.value) {
     const normalisedPs = normalise(...Object.values(deltas))
     deltas = Object.fromEntries(Object.keys(deltas).map((k, i) => [k, normalisedPs[i]]))
   } else {
