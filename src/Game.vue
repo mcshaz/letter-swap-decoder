@@ -8,16 +8,16 @@ import DecryptionDetails from './DecryptionDetails.vue'
 
 enum stages { paste, decode, summary}
 
-let usrMessage = $ref('');
-let encoded = $ref('');
-let activeLetter = $ref('')
-let stage=$ref(stages.paste)
+let usrMessage = ref('');
+let encoded = ref('');
+let activeLetter = ref('')
+let stage=ref(stages.paste)
 const decryptionKeys = reactive<Record<string, string>>({})
 
-const allLetterDetails = computed(() => alphabetDetails(encoded))
+const allLetterDetails = computed(() => alphabetDetails(encoded.value.toUpperCase()))
 
-const activeLetterDetails = computed(() => activeLetter
-  ? allLetterDetails.value.letterDetails[activeLetter]
+const activeLetterDetails = computed(() => activeLetter.value
+  ? allLetterDetails.value.letterDetails[activeLetter.value]
   : { pValues: {} })
 
 onMounted(() => {
@@ -35,28 +35,28 @@ function onKeyup(e: KeyboardEvent) {
 
 async function activate() {
   showMessage('click on letter within the message to select the encoded letter, then use the keyboard to determine what the real letter is')
-  stage = stages.decode;
+  stage.value = stages.decode;
 }
 
 function onKey(key: string) {
-  if (key.length !== 1 || !/[a-z]/i.test(key) || !activeLetter) return
+  if (key.length !== 1 || !/[a-z]/i.test(key) || !activeLetter.value) return
   key = key.toUpperCase()
   const used = Object.keys(decryptionKeys).find(k => decryptionKeys[k] === key)
   if (used) delete decryptionKeys[used] 
-  decryptionKeys[activeLetter] = key
+  decryptionKeys[activeLetter.value] = key
 }
 
 function showMessage(msg: string, time = 1000) {
-  usrMessage = msg;
+  usrMessage.value = msg;
   if (time > 0) {
     setTimeout(() => {
-      usrMessage = '';
+      usrMessage.value = '';
     }, time);
   }
 }
 
 function moveSummary() {
-  stage=stages.summary
+  stage.value=stages.summary
 }
 
 </script>

@@ -4,7 +4,7 @@ export default defineConfig(({ command }) => {
   const config = {
     plugins: [
       vue({
-        reactivityTransform: true,
+        reactivityTransform: false,
       }),
     ]
   }

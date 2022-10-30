@@ -38,7 +38,7 @@
           <th colspan="3">p value</th>
         </tr>
         <tr>
-          <th>Value (%)</th>
+          <th>Value</th>
           <th>Rank / 26</th>
           <th>max (all letters)</th>
         </tr>

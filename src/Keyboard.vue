@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { interpolateBetweenColors, normalise } from './stats';
 
 let props = defineProps<{
@@ -11,7 +11,7 @@ defineEmits<{
   (e: 'key', key: string): void
   (e: 'enter'): void}>()
 
-let isNormalised = $ref(false)
+let isNormalised = ref(false)
 
 const kb = [
   'QWERTYUIOP'.split(''),

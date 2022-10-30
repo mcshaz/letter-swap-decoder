@@ -11,7 +11,7 @@ const emit = defineEmits<{
   (e: 'update:active-letter', letter: string): void
 }>();
 
-let currentIndex = $ref(-1)
+// let currentIndex = ref(-1)
 let indx = 0;
 const paras = computed(() => props.modelValue.split('\n').map(p => p.split('').map(
   l => {
@@ -25,7 +25,7 @@ const paras = computed(() => props.modelValue.split('\n').map(p => p.split('').m
       let display = props.decryptionKeys[l]
       if (l !== uc) display = display.toLowerCase()
       return {
-        id: 'l' + indx,
+        id: 'l' + ++indx,
         display,
         original: l,
         uc
