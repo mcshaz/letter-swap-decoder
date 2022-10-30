@@ -12,9 +12,11 @@ const emit = defineEmits<{
 }>();
 
 let currentIndex = $ref(-1)
+let indx = 0;
 const paras = computed(() => props.modelValue.split('\n').map(p => p.split('').map(
   l => {
-    if (!/[a-z]/i.test(l)) return { 
+    if (!/[a-z]/i.test(l)) return {
+      id: 'l' + indx,
       display: l, 
       isNonAlpha: true 
     }
@@ -23,12 +25,14 @@ const paras = computed(() => props.modelValue.split('\n').map(p => p.split('').m
       let display = props.decryptionKeys[l]
       if (l !== uc) display = display.toLowerCase()
       return {
+        id: 'l' + indx,
         display,
         original: l,
         uc
       }
     }
     return {
+      id: 'l' + indx,
       display: l,
       uc
     }
@@ -42,7 +46,7 @@ function letterClick(letter: string) {
 <template>
   <div id="coded-text">
     <div v-for="p in paras">
-      <template v-for="l in p">
+      <template v-for="l in p" :key="l.id">
         <span class="non-alpha" v-if="l.isNonAlpha">
           {{l.display}}
         </span>

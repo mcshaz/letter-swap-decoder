@@ -14,7 +14,7 @@
       <tbody>
         <tr>
           <td></td>
-          <th v-for="k in Object.keys(stats)">
+          <th v-for="k in Object.keys(stats)" :key="k">
             <a href="#" :class="activeLetter === k ? 'active' : ''" 
                 @click.prevent="$emit('update:active-letter', k)">
               {{k}}
@@ -25,7 +25,7 @@
           <th>
             count
           </th>
-          <td v-for="v of stats">
+          <td v-for="(v, k) in stats" :key="k">
             {{v.count}}
           </td>
         </tr>
@@ -33,32 +33,16 @@
           <th>
             decoded
           </th>
-          <td v-for="c in decoded">
+          <td v-for="c in decoded" :key="c">
             {{c}}
           </td>
         </tr>
-        <tr>
+        <tr v-for="n in 3">
           <th>
-            p dif 1
+            p dif {{n}}
           </th>
-          <td v-for="v of stats">
-            {{(v.topPDifs[0]*100).toFixed(1)}}%
-          </td>
-        </tr>
-        <tr>
-          <th>
-            p dif 2
-          </th>
-          <td v-for="v of stats">
-            {{(v.topPDifs[1]*100).toFixed(1)}}%
-          </td>
-        </tr>
-        <tr>
-          <th>
-            p dif 3
-          </th>
-          <td v-for="v of stats">
-            {{(v.topPDifs[2]*100).toFixed(1)}}%
+          <td v-for="(v, k) in stats" :key="k">
+            {{(v.topPDifs[n-1]).toFixed(3)}}
           </td>
         </tr>
       </tbody>

@@ -52,7 +52,7 @@ const rows = computed(() => {
   <div id="keyboard">
     <div class="row" v-for="(row, i) in rows">
       <div :class="`spacer${i}`"></div>
-      <template v-for="key in row">
+      <template v-for="key in row" :key="key">
         <button
           v-if="key.colour"
           :class="key.isInUse ? 'used-key' : ''"

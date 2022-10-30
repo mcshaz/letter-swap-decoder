@@ -13,7 +13,7 @@
       const stats = props.stats[encoded]
       const pValue = stats.pValues[decoded]
       const descPValues = Object.values(stats.pValues).sort((a, b) => b - a)
-      const pToReadable = (p: number) => (p * 100).toFixed(3) + '%'
+      const pToReadable = (p: number) => (p).toFixed(4) 
       return {
         encoded,
         decoded,
@@ -42,7 +42,7 @@
           <th>Rank / 26</th>
           <th>max (all letters)</th>
         </tr>
-        <tr v-for="r in results">
+        <tr v-for="r in results" :key="r.encoded">
           <td>
             {{r.encoded}}
           </td>

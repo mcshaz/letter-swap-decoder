@@ -72,7 +72,14 @@ function moveSummary() {
     <EncodedText v-model="encoded" 
         v-model:active-letter="activeLetter" 
         :decryption-keys="decryptionKeys"/>
-    Total letters: <output>{{allLetterDetails.totalLetters}}</output>
+    <div>
+      <h4>
+        Total letters:
+        <output>
+          {{allLetterDetails.totalLetters}}
+        </output>
+      </h4>
+    </div>
     <Keyboard @key="onKey" :decryption-keys="decryptionKeys" 
         :p-values="activeLetterDetails.pValues" @enter="moveSummary"/>
     <LetterDetails :decryption-keys="decryptionKeys" 
