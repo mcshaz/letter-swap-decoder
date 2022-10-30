@@ -1,3 +1,5 @@
+:: run with .\deploy.bat
+:: for linux, see https://vitejs.dev/guide/static-deploy.html#github-pages
 echo on
 npm "run" "build"
 cd "dist"

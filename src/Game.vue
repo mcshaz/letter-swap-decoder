@@ -4,11 +4,14 @@ import Keyboard from './Keyboard.vue';
 import EncodedText from './EncodedText.vue';
 import { alphabetDetails } from './stats';
 import LetterDetails from './LetterDetails.vue'
+import DecryptionDetails from './DecryptionDetails.vue'
+
+enum stages { paste, decode, summary}
 
 let usrMessage = $ref('');
 let encoded = $ref('');
 let activeLetter = $ref('')
-let isActive=$ref(false)
+let stage=$ref(stages.paste)
 const decryptionKeys = reactive<Record<string, string>>({})
 
 const allLetterDetails = computed(() => alphabetDetails(encoded))
@@ -32,7 +35,7 @@ function onKeyup(e: KeyboardEvent) {
 
 async function activate() {
   showMessage('click on letter within the message to select the encoded letter, then use the keyboard to determine what the real letter is')
-  isActive = true;
+  stage = stages.decode;
 }
 
 function onKey(key: string) {
@@ -52,6 +55,10 @@ function showMessage(msg: string, time = 1000) {
   }
 }
 
+function moveSummary() {
+  stage=stages.summary
+}
+
 </script>
 
 <template>
@@ -61,22 +68,26 @@ function showMessage(msg: string, time = 1000) {
   <header>
     <h1>Decryptor</h1>
   </header>
-  <div v-if="isActive">
+  <div v-if="stage===stages.decode">
     <EncodedText v-model="encoded" 
         v-model:active-letter="activeLetter" 
         :decryption-keys="decryptionKeys"/>
     Total letters: <output>{{allLetterDetails.totalLetters}}</output>
     <Keyboard @key="onKey" :decryption-keys="decryptionKeys" 
-        :p-values="activeLetterDetails.pValues"/>
+        :p-values="activeLetterDetails.pValues" @enter="moveSummary"/>
     <LetterDetails :decryption-keys="decryptionKeys" 
         :stats="allLetterDetails.letterDetails"
         v-model:active-letter="activeLetter"/>
   </div>
-  <div v-else>
+  <div v-else-if="stage===stages.paste">
     <div>
       <textarea id="encoded-text" v-model="encoded"></textarea>
     </div>
     <button id="activate-button" @click="activate" :disabled="!encoded">Go</button>
+  </div>
+  <div v-else>
+    <DecryptionDetails :decryption-keys="decryptionKeys" :stats="allLetterDetails.letterDetails"/>
+    <button id="leave-summary" @click="stage=stages.decode">Back</button>
   </div>
   <hr />
   <footer>
@@ -120,7 +131,7 @@ function showMessage(msg: string, time = 1000) {
   grid-gap: 5px;
 }
 
-#activate-button {
+#activate-button, #leave-summary {
 	display: inline-block;
 	padding: 0.375rem 0.75rem;
   margin: 0.3rem;
@@ -139,7 +150,7 @@ function showMessage(msg: string, time = 1000) {
 	background-color: #198754;
 	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
-#activate-button:hover {
+#activate-button:hover, #leave-summary:hover {
   background-color: #157347;
   border-color: #146c43;
 }

@@ -7,12 +7,16 @@ let props = defineProps<{
   pValues: Record<string, number>;
 }>();
 
+defineEmits<{
+  (e: 'key', key: string): void
+  (e: 'enter'): void}>()
+
 let isNormalised = $ref(false)
 
 const kb = [
   'QWERTYUIOP'.split(''),
   'ASDFGHJKL'.split(''),
-  [...'ZXCVBNM'.split(''), 'Normalise'],
+  ['normalise', ...'ZXCVBNM'.split(''),'enter'],
 ];
 
 const rows = computed(() => {
@@ -59,11 +63,17 @@ const rows = computed(() => {
           <span>{{ key.value }}</span>
         </button>
         <button
-          v-else
-          class="normalise"
+          v-else-if="key.value==='normalise'"
+          class="non-alpha"
           :class="isNormalised ? 'depressed' : ''"
           @click="isNormalised=!isNormalised"
           title="spread narrow range of colours (representing small differences in letter probabilities) wider"
+        >
+          <span>{{ key.value }}</span>
+        </button>
+        <button v-else
+          class="non-alpha"
+          @click="$emit('enter')"
         >
           <span>{{ key.value }}</span>
         </button>
@@ -88,7 +98,7 @@ const rows = computed(() => {
   flex: 0.5;
 }
 .spacer2 {
-  flex: 1.6;
+  flex: 0.2;
 }
 .used-key {
   color: #AAA;
@@ -118,7 +128,7 @@ button:last-of-type {
 button.big {
   flex: 1.5;
 }
-.normalise {
+.non-alpha {
   padding: 0 7px;
   font-size:90%;
   text-transform: lowercase;

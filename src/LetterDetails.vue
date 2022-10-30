@@ -13,7 +13,7 @@
     <table>
       <tbody>
         <tr>
-          <th>encoded</th>
+          <td></td>
           <th v-for="k in Object.keys(stats)">
             <a href="#" :class="activeLetter === k ? 'active' : ''" 
                 @click.prevent="$emit('update:active-letter', k)">
