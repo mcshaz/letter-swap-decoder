@@ -25,7 +25,7 @@ const rows = computed(() => {
   const used = new Set(Object.values(props.decryptionKeys))
   const highPColour = {r: 0, g: 255, b: 0}
   const lowPColour = {r: 255, g: 0, b: 0}
-  const transform = isRank ? orderNormalise : normalise
+  const transform = isRank.value ? orderNormalise : normalise
   const normalised = transform(...Object.values(props.pValues))
   const deltas = Object.fromEntries(Object.keys(props.pValues).map((k, i) => [k, normalised[i]]))
 
