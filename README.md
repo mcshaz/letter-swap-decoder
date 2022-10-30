@@ -17,7 +17,7 @@ Copy a message paste it into the text area, then click 'go'.
 Three sections then display:
 1) the message with each letter selectable, All instances of that (now active) 
 letter will be coloured red.
-Any letters has already been substituted (decoded), it will have an azure background.
+Any letters that have already been substituted (decoded) will have an azure background in the message.
 2) the keyboard (you can type the key with your normal keyboard). Once a letter is selected in the message above, each key you press will provide the decoded value. Letters which have already been assiged will be grey, but are still usable (unsetting the previous value in exchange for the currently selected [encoded] letter)
 The keyboard has a normalise button which scales the range of keyboard 'likelihood' colours for the selected (encoded) letter across the available colour range (red to green). The colours range from red to green, with pure green being the most likely and graduated colours in between. if you have a mouse, hovering will display the p value.
 3) The letter stats, including the number of occurences of the letter. The row 
