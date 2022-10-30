@@ -82,10 +82,9 @@ function letterClick(letter: string) {
   }
   .current {
     color: red;
-    font-weight: bold;
   }
   .decrypted {
-    background-color: azure;
+    background-color: rgb(145, 185, 185);
   }
   .source {
     background-color: yellow;

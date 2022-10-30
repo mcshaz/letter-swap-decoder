@@ -4,9 +4,9 @@
 My father would send my kids messages with simple letter for letter sustitutions
 as a game. Included with the messages were some letter frequency data taken from Cornell University.
 This tool was designed to
-- Facilitate and give hints to the 'codebreakers', without _solving_ or eliminating the challenge 
+- Facilitate and give hints to the 'codebreakers', without _solving_ or eliminating the challenge .
 - Provide a personal exploration of the statistics around letter frequency,
-and how usful they might prove
+and how useful they might prove.
 
 ## Get started
 The working application is at https://mcshaz.github.io/letter-swap-decoder/

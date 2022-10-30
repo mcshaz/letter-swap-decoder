@@ -99,7 +99,7 @@ fieldset {
   flex: 0.2;
 }
 .used-key {
-  color: #AAA;
+  color: rgb(119, 165, 211);
 }
 button {
   font-family: inherit;
@@ -137,9 +137,9 @@ button.big {
 }
 .depressed {
   background: #e5e5e5;
-  -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
-  -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
-  box-shadow: inset 0px 0px 5px #c1c1c1;
+  -webkit-box-shadow: inset 2px 2px 0 0 #777;
+  -moz-box-shadow: inset 2px 2px 0 0 #777;
+  box-shadow: inset 2px 2px 0 0 #777;
   outline: none;
 }
 </style>
