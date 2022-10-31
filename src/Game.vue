@@ -108,6 +108,7 @@ function moveSummary() {
       stackblitz.com/edit/vitejs-vite-jjggsx
     </a>
   </small>
+  <p>version 0.0.1</p>
   </footer>
 </template>
 

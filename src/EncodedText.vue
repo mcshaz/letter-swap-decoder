@@ -17,7 +17,7 @@ const paras = computed(() => props.modelValue.split('\n').map(p => p.split('').m
   l => {
     const id = 'l' + ++indx
     if (!/[a-z]/i.test(l)) return {
-       id,
+      id,
       display: l, 
       isNonAlpha: true 
     }
@@ -82,9 +82,10 @@ function letterClick(letter: string) {
   }
   .current {
     color: red;
+    font-weight: bold;
   }
   .decrypted {
-    background-color: rgb(145, 185, 185);
+    background-color: rgb(220, 255, 255);
   }
   .source {
     background-color: yellow;
