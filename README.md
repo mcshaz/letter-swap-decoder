@@ -19,7 +19,7 @@ Three sections then display:
 letter will be coloured red.
 Any letters that have already been substituted (decoded) will have an azure background in the message.
 2) The keyboard (you can type the key with your normal keyboard). Once a letter is selected in the message above, each key you press will provide the decoded value. Letters which have already been assiged will be grey, but are still usable (unsetting the previous value in exchange for the currently selected [encoded] letter)
-The keyboard has a rank button which changes the scale/graduation of the keyboard 'likelihood' colours for the selected (encoded) letter. That is, it changes the graduation across the available colour range (from red to green). Pure green is statistically the most likely (based on single charachter counts) and colours are graduated towards red. With rank, it is only the _order_ of probabilities which apply so that there will be 26 even graduations. Otherwise the graduations take into account the magnitude of differences between probabilities. if you have a mouse, hovering will display the p value.
+The keyboard kays are outlined in a graduated colour from green to red. Pure green is statistically the most likely (based on single charachter counts) and colours are graduated towards red. The colour graduations take into account the magnitude of differences between probabilities. if you have a mouse, hovering will display the p value.
 3) The letter stats, including the number of occurences of the letter. The row 
 labelled 'p diff 1' refers to the difference between the highest p value to the 2nd highest 
 for the selected (encoded) letter.

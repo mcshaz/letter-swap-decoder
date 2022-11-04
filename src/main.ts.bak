@@ -1,0 +1,8 @@
+import { createApp } from 'vue';
+import Game from './pages/DecodeMsg.vue';
+import { createPinia } from 'pinia';
+import './game.css';
+
+const app = createApp(Game)
+const pinia = createPinia()
+app.mount('#app');

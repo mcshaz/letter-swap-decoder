@@ -1,6 +1,6 @@
 {
   "name": "vite-vue-starter",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "author": {
     "name": "Brent McSharry"
   },
@@ -11,12 +11,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check build-only",
-    "preview": "vite preview",
-    "test:unit": "vitest --environment jsdom --root src/",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@stdlib/stats-base-dists-binomial-pmf": "^0.0.7",
