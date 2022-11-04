@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { interpolateBetweenColors, normalise } from "@/helpers/letterFreqStats";
+import { interpolateBetweenColors, normalise, type englishLetter } from "@/helpers/letterFreqStats";
 import { useEncodedMessageStore } from "@/stores/useEncodedMessageStore";
 
 const props = defineProps<{ activeEncodedLetter: string }>();
@@ -38,6 +38,8 @@ const rows = computed(() => {
     Object.keys(letterData.value).map((k, i) => [k, normalised[i]])
   );
 
+  const usedKeys = new Set(encodedMsgStore.decryptionKeys.values());
+
   return kb.map((k) =>
     k.map((c) =>
       c.length === 1
@@ -51,7 +53,7 @@ const rows = computed(() => {
             p: `probability=${
               letterData.value[c]?.toFixed(3) || "[select letter]"
             }`,
-            isInUse: encodedMsgStore.decryptionKeys.has(c),
+            isInUse: usedKeys.has(c as englishLetter),
           }
         : {
             value: c,
@@ -88,7 +90,6 @@ const rows = computed(() => {
 </template>
 
 <style scoped>
-
 #keyboard {
   margin: 30px 75px 0;
   user-select: none;
