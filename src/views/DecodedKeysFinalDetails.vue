@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useEncodedMessageStore } from "@/stores/useEncodedMessageStore";
-import { getOrderedLikelihood } from "@/helpers/letterFreqStats";
+import {
+  getOrderedLikelihood,
+  type englishLetter,
+} from "@/helpers/letterFreqStats";
 
 const encodedMessageStore = useEncodedMessageStore();
 const results = computed(() =>
@@ -16,7 +19,8 @@ const results = computed(() =>
       count: stats.count,
       pValue: pToReadable(stats.decodesToProbs[decoded]),
       rank: probOrders.indexOf(decoded) + 1,
-      maxP: probOrders[0],
+      maxP: stats.decodesToProbs[probOrders[0] as englishLetter].toFixed(3),
+      maxLetter: probOrders[0],
     };
   })
 );
@@ -53,9 +57,7 @@ defineEmits<{ e: "update:active-letter"; letter: string }>();
           <td>
             {{ r.rank }}
           </td>
-          <td>
-            {{ r.maxP }}
-          </td>
+          <td>{{ r.maxP }}&nbsp;({{ r.maxLetter }})</td>
         </tr>
       </tbody>
     </table>
