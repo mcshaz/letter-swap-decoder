@@ -44,7 +44,7 @@ const goDecode = () => {
 
 <style scoped>
 p {
-  font-size: 1rem;
+  font-size: 1em;
   color: navy;
   text-align: justify;
 }

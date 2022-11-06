@@ -3,7 +3,7 @@ body {
   text-align: center;
   max-width: 800px;
   margin: 0px auto;
-  padding-bottom: 1.5em;;
+  padding-bottom: 1.5em;
 }
 
 h1 {
@@ -27,6 +27,7 @@ textarea {
   overflow-y: scroll;
   height: 50vh;
   font-family: "Courier New", Courier, monospace;
+  font-size: 1.2em;
 }
 
 .btn {

@@ -9,6 +9,7 @@ import {
 defineProps<{
   activeLetter: string;
 }>();
+
 defineEmits<{ e: "update:active-letter"; letter: string }>();
 
 const store = useEncodedMessageStore();
@@ -18,7 +19,10 @@ const orderedKeys = computed(() =>
 );
 
 const decoded = computed(() =>
-  orderedKeys.value.map((c) => store.decryptionKeys.get(c) || "")
+  orderedKeys.value.map((c, i) => ({
+    display: store.decryptionKeys.get(c) || "",
+    id: store.decryptionKeys.get(c) || i,
+  }))
 );
 
 const highestProbs = computed(() =>
@@ -67,8 +71,8 @@ const getSuffix = (inpt: number) => {
         </tr>
         <tr>
           <th>decoded</th>
-          <td v-for="c in decoded" :key="c">
-            {{ c }}
+          <td v-for="c in decoded" :key="c.id">
+            {{ c.display }}
           </td>
         </tr>
         <tr v-for="n in 3" :key="n">

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useEncodedMessageStore } from "@/stores/useEncodedMessageStore";
 
 interface letterDisplay {
@@ -11,7 +11,7 @@ interface letterDisplay {
   prior?: string;
 }
 
-defineProps<{
+const props = defineProps<{
   activeLetter: string;
 }>();
 
@@ -20,10 +20,20 @@ const emit = defineEmits<{
 }>();
 
 const encodedMsgStore = useEncodedMessageStore();
+const currentIndex = ref(-1);
 
-// let currentIndex = ref(-1)
-const paras = computed(() =>
-  encodedMsgStore.message.split("\n").map((p) => {
+onMounted(() => {
+  window.addEventListener("keydown", onKeydown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("keydown", onKeydown);
+});
+
+const paras = computed(() => {
+  let pos = -1;
+  return encodedMsgStore.message.split("\n").map((p) => {
+    ++pos; // we want the id to map back to string position & \n takes a posiiton
     const rv = Array(p.length) as letterDisplay[];
     for (let i = 0; i < p.length; ++i) {
       const c = p[i];
@@ -41,7 +51,7 @@ const paras = computed(() =>
         }
         const isDecrypted = Boolean(decrypted);
         rv[i] = {
-          id: i,
+          id: pos++,
           uc,
           display: decrypted || c,
           prior: isDecrypted ? `decrypted from '${c}''` : undefined,
@@ -50,18 +60,58 @@ const paras = computed(() =>
         };
       } else {
         rv[i] = {
-          id: i,
+          id: pos++,
           display: c,
           isNonAlpha: true,
         };
       }
     }
     return rv;
-  })
+  });
+});
+
+function letterClick(index: number) {
+  currentIndex.value = index;
+  emit(
+    "update:active-letter",
+    index === -1 ? "" : encodedMsgStore.message[index].toUpperCase()
+  );
+}
+
+watch(
+  () => props.activeLetter,
+  (newValue) => {
+    // activelettter has been sry outside this component
+    if (newValue !== encodedMsgStore.message[currentIndex.value].toUpperCase())
+      currentIndex.value = -1;
+  }
 );
 
-function letterClick(letter: string) {
-  emit("update:active-letter", letter);
+function onKeydown(ev: KeyboardEvent) {
+  if (
+    currentIndex.value === -1 ||
+    (ev.key !== "ArrowRight" && ev.key !== "ArrowLeft")
+  )
+    return;
+  const index = findNextAlpha(
+    encodedMsgStore.message,
+    currentIndex.value,
+    ev.key === "ArrowRight"
+  );
+  if (index >= 0) {
+    letterClick(index);
+  }
+  function findNextAlpha(str: string, startIndex: number, fwd = true) {
+    let index = startIndex;
+    let next = fwd ? () => ++index < str.length : () => --index >= 0;
+    let cc: number;
+    while (
+      next() &&
+      ((cc = str.charCodeAt(index)) < 65 || (90 < cc && cc < 97) || 122 < cc)
+      // eslint-disable-next-line no-empty
+    ) {}
+    return index < str.length ? index : -1;
+  }
 }
 </script>
 
@@ -75,9 +125,13 @@ function letterClick(letter: string) {
         <span
           v-else
           class="alpha char"
-          :class="{ current: l.uc === activeLetter, decrypted: l.isDecrypted }"
+          :class="{
+            current: l.id === currentIndex,
+            'active-letter': l.uc === activeLetter,
+            decrypted: l.isDecrypted,
+          }"
           :title="l.prior"
-          @click="letterClick(l.uc!)"
+          @click="letterClick(l.id)"
         >
           {{ l.display }}
         </span>
@@ -93,10 +147,11 @@ function letterClick(letter: string) {
   overflow-y: scroll;
   max-height: 50vh;
   font-family: "Courier New", Courier, monospace;
+  font-size: 1.25em;
 }
 .char {
   display: inline-block;
-  width: 11px;
+  width: 1.15em;
   text-align: center;
 }
 .non-alpha {
@@ -109,12 +164,16 @@ function letterClick(letter: string) {
 .alpha:hover {
   border: 1px solid green;
 }
-.current {
+.active-letter {
   color: red;
   font-weight: bold;
 }
 .decrypted {
   background-color: rgb(220, 255, 255);
+}
+.current {
+  text-decoration: underline;
+  background-color: yellow;
 }
 .source {
   background-color: yellow;
