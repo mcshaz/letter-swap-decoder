@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useEncodedMessageStore } from "@/stores/useEncodedMessageStore";
 import {
   getOrderedLikelihood,
   type englishLetter,
 } from "@/helpers/letterFreqStats";
 
-defineProps<{
+const props = defineProps<{
   activeLetter: string;
 }>();
 
 defineEmits<{ e: "update:active-letter"; letter: string }>();
 
 const store = useEncodedMessageStore();
+
+const mainDiv = ref<HTMLDivElement>();
 
 const orderedKeys = computed(() =>
   Object.keys(store.allLetterStats.letterDetails)
@@ -46,9 +48,28 @@ const getSuffix = (inpt: number) => {
       return "th";
   }
 };
+
+watch(
+  () => props.activeLetter,
+  (newActiveLetter) => {
+    if (newActiveLetter && mainDiv.value) {
+      if (mainDiv.value.scrollWidth > mainDiv.value.clientWidth) {
+        // this is assumuing header column is the same width as the others, which might not be true
+        const elWidth =
+          mainDiv.value.scrollWidth / (orderedKeys.value.length + 1);
+        const activeLetterIndex = orderedKeys.value.indexOf(newActiveLetter);
+        let scroll =
+          (activeLetterIndex + 1.5) * elWidth - 0.5 * mainDiv.value.clientWidth;
+        if (scroll < 0) scroll = 0;
+        // assuming if > available scroll width it will be limited
+        mainDiv.value.scrollLeft = scroll;
+      }
+    }
+  }
+);
 </script>
 <template>
-  <div id="letter-details">
+  <div id="letter-details" ref="mainDiv">
     <table>
       <tbody>
         <tr>
@@ -90,7 +111,7 @@ const getSuffix = (inpt: number) => {
 
 <style scoped>
 #letter-details {
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 .active {
   background-color: yellow;

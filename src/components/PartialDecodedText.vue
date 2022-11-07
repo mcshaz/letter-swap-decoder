@@ -81,8 +81,11 @@ function letterClick(index: number) {
 watch(
   () => props.activeLetter,
   (newValue) => {
-    // activelettter has been sry outside this component
-    if (newValue !== encodedMsgStore.message[currentIndex.value].toUpperCase())
+    // activelettter has been set outside this component
+    if (
+      currentIndex.value !== -1 &&
+      newValue !== encodedMsgStore.message[currentIndex.value].toUpperCase()
+    )
       currentIndex.value = -1;
   }
 );
@@ -144,7 +147,7 @@ function onKeydown(ev: KeyboardEvent) {
   width: 100%;
   resize: both;
   text-align: left;
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 50vh;
   font-family: "Courier New", Courier, monospace;
   font-size: 1.25em;
