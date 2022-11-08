@@ -5,9 +5,11 @@ import PartialDecodedText from "@/components/PartialDecodedText.vue";
 import DecodingKeyStats from "@/components/DecodingKeyStats.vue";
 import { useEncodedMessageStore } from "@/stores/useEncodedMessageStore";
 import { useRouter } from "vue-router";
+import CommonWordLengths from "@/components/CommonWordLengths.vue";
 
 const activeLetter = ref("");
 const usrMsg = ref("");
+const activeWordLength = ref(0);
 const encodedMsgStore = useEncodedMessageStore();
 const router = useRouter();
 
@@ -46,7 +48,10 @@ function showMessage(msg: string, time = 3000) {
   <Transition>
     <div class="message" v-if="usrMsg">{{ usrMsg }}</div>
   </Transition>
-  <PartialDecodedText v-model:active-letter="activeLetter" />
+  <PartialDecodedText
+    v-model:active-letter="activeLetter"
+    @update:active-word="(newValue) => (activeWordLength = newValue.length)"
+  />
   <hr />
   <div>
     <h4>
@@ -62,6 +67,7 @@ function showMessage(msg: string, time = 3000) {
     :active-encoded-letter="activeLetter"
   />
   <DecodingKeyStats v-model:active-letter="activeLetter" />
+  <CommonWordLengths :word-length="activeWordLength" />
 </template>
 
 <style scoped>

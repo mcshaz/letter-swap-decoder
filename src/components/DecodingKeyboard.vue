@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { interpolateBetweenColors, normalise, type englishLetter } from "@/helpers/letterFreqStats";
+import {
+  interpolateBetweenColors,
+  normalise,
+  type englishLetter,
+} from "@/helpers/letterFreqStats";
 import { useEncodedMessageStore } from "@/stores/useEncodedMessageStore";
 
 const props = defineProps<{ activeEncodedLetter: string }>();

@@ -17,10 +17,13 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: "update:active-letter", letter: string): void;
+  (e: "update:active-word", word: string): void;
 }>();
 
 const encodedMsgStore = useEncodedMessageStore();
 const currentIndex = ref(-1);
+const startWordSelect = ref(-1);
+const endWordSelect = ref(-1);
 
 onMounted(() => {
   window.addEventListener("keydown", onKeydown);
@@ -72,10 +75,37 @@ const paras = computed(() => {
 
 function letterClick(index: number) {
   currentIndex.value = index;
+  if (index < startWordSelect.value || index >= endWordSelect.value) {
+    startWordSelect.value = endWordSelect.value = -1;
+  }
   emit(
     "update:active-letter",
     index === -1 ? "" : encodedMsgStore.message[index].toUpperCase()
   );
+}
+
+function letterDblClick(index: number) {
+  startWordSelect.value =
+    findNextNonAlpha(encodedMsgStore.message, index, false) + 1;
+  endWordSelect.value = findNextNonAlpha(encodedMsgStore.message, index, true);
+  const word = encodedMsgStore.message.slice(
+    startWordSelect.value,
+    endWordSelect.value
+  );
+  emit("update:active-word", word);
+
+  function findNextNonAlpha(str: string, startIndex: number, fwd = true) {
+    let index = startIndex;
+    let next = fwd ? () => ++index < str.length : () => --index >= 0;
+    let cc: number;
+    while (
+      next() &&
+      ((65 <= (cc = str.charCodeAt(index)) && cc <= 90) ||
+        (97 <= cc && cc <= 122))
+      // eslint-disable-next-line no-empty
+    ) {}
+    return index;
+  }
 }
 
 watch(
@@ -131,10 +161,12 @@ function onKeydown(ev: KeyboardEvent) {
           :class="{
             current: l.id === currentIndex,
             'active-letter': l.uc === activeLetter,
+            'active-word': startWordSelect <= l.id && l.id <= endWordSelect,
             decrypted: l.isDecrypted,
           }"
           :title="l.prior"
           @click="letterClick(l.id)"
+          @dblclick="letterDblClick(l.id)"
         >
           {{ l.display }}
         </span>
@@ -170,6 +202,11 @@ function onKeydown(ev: KeyboardEvent) {
 .active-letter {
   color: red;
   font-weight: bold;
+}
+.active-word {
+  font-weight: bold;
+  border-top: 2px solid orange;
+  border-bottom: 2px solid orange;
 }
 .decrypted {
   background-color: rgb(220, 255, 255);
