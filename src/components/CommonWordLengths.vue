@@ -16,7 +16,7 @@ const wordsOfLength = computed(() => wordFreqStats[props.wordLength]);
   </div>
 </template>
 <style scoped>
-li {
+#words-of-length {
   text-align: left;
 }
 </style>
