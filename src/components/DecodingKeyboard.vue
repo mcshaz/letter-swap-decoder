@@ -10,8 +10,8 @@ import { useEncodedMessageStore } from "@/stores/useEncodedMessageStore";
 const props = defineProps<{ activeEncodedLetter: string }>();
 
 defineEmits<{
-  (e: "key", key: string): void;
-  (e: "enter"): void;
+  (e: "key-click", key: string): void;
+  (e: "enter-key-click"): void;
 }>();
 
 const encodedMsgStore = useEncodedMessageStore();
@@ -79,12 +79,17 @@ const rows = computed(() => {
           :style="{
             borderColor: `rgb(${key.colour.r},${key.colour.g},${key.colour.b})`,
           }"
-          @click="$emit('key', key.value)"
+          @click="$emit('key-click', key.value)"
           :title="key.p"
         >
           <span>{{ key.value }}</span>
         </button>
-        <button v-else type="button" class="non-alpha" @click="$emit('enter')">
+        <button
+          v-else
+          type="button"
+          class="non-alpha"
+          @click="$emit('enter-key-click')"
+        >
           <span>{{ key.value }}</span>
         </button>
       </template>

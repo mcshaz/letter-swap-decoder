@@ -27,7 +27,11 @@ onUnmounted(() => {
 });
 
 function onKeyup(e: KeyboardEvent) {
-  onKey(e.key);
+  if (e.key === "Escape" || e.key === "Delete") {
+    encodedMsgStore.decryptionKeys.delete(activeLetter.value);
+  } else {
+    onKey(e.key);
+  }
 }
 
 function onKey(key: string) {
@@ -62,8 +66,8 @@ function showMessage(msg: string, time = 3000) {
     </h4>
   </div>
   <DecodingKeyboard
-    @key="onKey"
-    @enter="router.push({ name: 'decoded-key-details' })"
+    @key-click="onKey"
+    @enter-key-click="router.push({ name: 'decoded-key-details' })"
     :active-encoded-letter="activeLetter"
   />
   <DecodingKeyStats v-model:active-letter="activeLetter" />
