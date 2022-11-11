@@ -21,7 +21,7 @@ import { RouterView } from "vue-router";
         github.com/mcshaz/letter-swap-decoder </a
       >. More detail can be found there.
     </small>
-    <p>version 0.1.2</p>
+    <p>version 0.1.3</p>
   </footer>
 </template>
 
