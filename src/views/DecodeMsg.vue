@@ -6,6 +6,7 @@ import DecodingKeyStats from "@/components/DecodingKeyStats.vue";
 import { useEncodedMessageStore } from "@/stores/useEncodedMessageStore";
 import { useRouter } from "vue-router";
 import CommonWordLengths from "@/components/CommonWordLengths.vue";
+import BigramStatDisplay from "@/components/BigramStatDisplay.vue";
 
 const activeLetter = ref("");
 const usrMsg = ref("");
@@ -71,6 +72,9 @@ function showMessage(msg: string, time = 3000) {
     :active-encoded-letter="activeLetter"
   />
   <DecodingKeyStats v-model:active-letter="activeLetter" />
+  <hr />
+  <BigramStatDisplay />
+  <hr />
   <CommonWordLengths :word-length="activeWordLength" />
 </template>
 
